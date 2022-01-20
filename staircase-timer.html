@@ -1,0 +1,121 @@
+<script type="text/javascript">
+  RED.nodes.registerType('staircase-timer',{
+    category: 'function',
+    color: '#a6bbcf',
+    defaults: {
+      name: {value:""},
+      timeout: {value: 60, required: true, validate: RED.validators.number()},
+      onPayload: {value:"on"},
+      onPayloadType: {value:"str"},
+      offPayload: {value:"off"},
+      offPayloadType: {value:"str"},
+      renewable: {value:""}
+    },
+    inputs:1,
+    outputs:1,
+    icon: "font-awesome/fa-clock-o",
+    label: function() {
+      return this.name||"staircase-timer";
+    },
+    oneditprepare: function() {
+      $("#node-input-onPayload").typedInput({
+        type:"str",
+        types:["str","num","bool"],
+        typeField: "#node-input-onPayloadType"
+      });
+      $("#node-input-offPayload").typedInput({
+        type:"str",
+        types:["str","num","bool"],
+        typeField: "#node-input-offPayloadType"
+      });
+    },
+    oneditsave: function() {
+      this.onPayloadType = $("#node-input-onPayload").typedInput('type');
+      this.offPayloadType = $("#node-input-offPayload").typedInput('type');
+    }
+  });
+</script>
+
+<script type="text/html" data-template-name="staircase-timer">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Timeout seconds</label>
+    <input type="text" id="node-input-timeout" placeholder="Seconds">
+  </div>
+  <div class="form-row">
+    <label for="node-input-onPayload"><i class="fa fa-tag"></i> Payload for ON</label>
+    <input type="text" id="node-input-onPayload">
+    <input type="hidden" id="node-input-onPayloadType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-offPayload"><i class="fa fa-tag"></i> Payload for OFF</label>
+    <input type="text" id="node-input-offPayload">
+    <input type="hidden" id="node-input-offPayloadType">
+  </div>
+  <div class="form-row">
+    <label for="node-input-renewable"><i class="fa fa-tag"></i> Renewable</label>
+    <input type="checkbox" id="node-input-renewable" value="1">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="staircase-timer">
+  <p>Mimics a staircase timer: it can be switched on and stays on until turned off or until a certain time passes.</p>
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>payload
+      <span class="property-type">string | number | boolean</span>
+    </dt>
+    <dd>must be one of:
+      <ul>
+        <li><b>"start" | "on" | "1" | "true" | 1 | true</b> (in the following referenced as "start" signal)</li>
+        <li><b>"stop" | "off" | "0" | "false" | 0 | false </b> (in the following referenced as "stop" signal)</li>
+        <li>"toggle"</li>
+      </ul>
+    </dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <ol class="node-ports">
+    <li>Standard output
+      <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>"on" | "off" or the corresponding values provided in config</dd>
+      </dl>
+    </li>
+    <li>Standard error
+      <dl class="message-properties">
+        <dt>payload <span class="property-type">string</span></dt>
+        <dd>error message</dd>
+      </dl>
+    </li>
+  </ol>
+
+  <h3>Details</h3>
+  <p>
+    If the node is in "off" state, a "start" signal will change the node state to "on" state.<br/>
+  </p>
+  <p>
+    When the state is changed from "off" to "on", a message with the "on" payload will be emitted.<br/>
+  </p>
+  <p>
+    The state will be changed back to "off", when a "stop" signal is received while in "on" state or when the configured timeout seconds passed.<br/>
+  </p>
+  <p>
+    When the state is changed from "on" to "off", a message with the "off" payload will be emitted.<br/>
+  </p>
+  <p>
+    While in "off" state, "stop" signals are ignored.<br/>
+  </p>
+  <p>
+    While in "on" state, "start" signals prolong the timeout if the configuration is set to "renewable" otherwise they are ignored.<br/>
+  </p>
+  <p>
+    Messages are only emitted when the state of the node changes.<br/>
+  </p>
+  <p>
+    The "toggle" signal can be used to act either as "start" or "stop" depending on state.<br/>
+  </p>
+</script>
