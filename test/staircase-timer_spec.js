@@ -30,7 +30,7 @@ describe('staircase-timer Node', function () {
     });
 
     for (let inMessage of ['on','start','1','true',1,true]) {
-        it('message "' + inMessage + '" while off should change state', function (done) {
+        it((typeof inMessage) + ' message "' + inMessage + '" while off should change state', function (done) {
             const flow = [
                 { id: "n1", type: "staircase-timer", name: "test name", timeout: "2" }
             ];
@@ -41,7 +41,7 @@ describe('staircase-timer Node', function () {
                 done();
             });
         });
-        it('message "'+ inMessage + '" while off should send on message', function (done) {
+        it((typeof inMessage) + ' message "' + inMessage + '" while off should send on message', function (done) {
             const flow = [
                 { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", wires: [["n2"]] },
                 { id: "n2", type: "helper" }
@@ -56,7 +56,7 @@ describe('staircase-timer Node', function () {
                 n1.receive({ payload: inMessage });
             });
         });
-        it('message "'+ inMessage + '" while off should send custom message', function (done) {
+        it((typeof inMessage) + ' message "' + inMessage + '" while off should send custom message', function (done) {
             const flow = [
                 { id: "n1", type: "staircase-timer", onPayload: "eingeschaltet", name: "test name", timeout: "2", wires: [["n2"]] },
                 { id: "n2", type: "helper" }
@@ -71,7 +71,7 @@ describe('staircase-timer Node', function () {
                 n1.receive({ payload: inMessage });
             });
         });
-        it('node should turn off again X seconds after message "'+ inMessage + '"', function (done) {
+        it('node should turn off again X seconds after ' + (typeof inMessage) + ' message "'+ inMessage + '"', function (done) {
             this.timeout(3000);
             this.slow(1800);
             const flow = [
@@ -134,7 +134,7 @@ describe('staircase-timer Node', function () {
     });
 
     for (let inMessage of ['off','stop','0','false',0,false]) {
-        it('message "' + inMessage + '" while off should not change state', function (done) {
+        it((typeof inMessage) + ' message "' + inMessage + '" while off should not change state', function (done) {
             const flow = [
                 { id: "n1", type: "staircase-timer", name: "test name", timeout: "1" }
             ];
@@ -159,7 +159,7 @@ describe('staircase-timer Node', function () {
         //         done();
         //     });
         // });
-        it('message "' + inMessage + '" while on should change state', function (done) {
+        it((typeof inMessage) + ' message "' + inMessage + '" while on should change state', function (done) {
             const flow = [
                 { id: "n1", type: "staircase-timer", name: "test name", timeout: "1" }
             ];
@@ -171,7 +171,7 @@ describe('staircase-timer Node', function () {
                 done();
             });
         });
-        it('message "'+ inMessage + '" while on should send off message', function (done) {
+        it((typeof inMessage) + ' message "'+ inMessage + '" while on should send off message', function (done) {
             const flow = [
                 { id: "n1", type: "staircase-timer", name: "test name", timeout: "1", wires: [["n2"]] },
                 { id: "n2", type: "helper" }
@@ -187,7 +187,7 @@ describe('staircase-timer Node', function () {
                 n1.receive({ payload: inMessage });
             });
         });
-        it('message "'+ inMessage + '" while on should send custom message', function (done) {
+        it((typeof inMessage) + ' message "'+ inMessage + '" while on should send custom message', function (done) {
             const flow = [
                 { id: "n1", type: "staircase-timer", offPayload: "ausgeschaltet", name: "test name", timeout: "2", wires: [["n2"]] },
                 { id: "n2", type: "helper" }
