@@ -4,6 +4,7 @@
   "description": "provides a node to mimic staircase timer behaviour",
   "main": "staircase-timer.js",
   "scripts": {
+    "test": "mocha \"test/**/*_spec.js\""
   },
   "keywords": [
     "node-red",
@@ -28,6 +29,7 @@
   },
   "homepage": "https://github.com/norganos/node-red-contrib-staircase-timer#readme",
   "devDependencies": {
+    "mocha": "^9.1.4",
     "node-red": "^2.1.6",
     "node-red-node-test-helper": "^0.2.7",
     "should": "^13.2.3"
