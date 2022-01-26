@@ -8,6 +8,10 @@ This package provides a node that mimics the behavior of a staircase timer relai
 In contrast to a flow composed of delays, this node prevents race conditions when multiple
 on/off cycles occur within the timeout.
 
+The node holds the current state (on or off), and only emits messages when the state changes.
+This means that input messages that do not change the state (e.g. a start signal when it's already on)
+have no direct effect.
+
 ## Possible Input Payloads
 
 - `"start"` | `"on"` | `"1"` | `1` | `"true"` | `true` is a start signal

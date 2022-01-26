@@ -16,7 +16,6 @@ module.exports = function(RED) {
     }
 
     const noopAction = function(node) {
-        node.log("noop");
     };
 
     const startAction = function(node, msg, send) {

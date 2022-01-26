@@ -1,31 +1,32 @@
 {
   "name": "node-red-contrib-staircase-timer",
-  "version": "0.0.1",
-  "description": "provides a node to mimic staircase timer behaviour",
+  "version": "1.0.0",
+  "description": "Plugin for Node-RED: provides a node to mimic staircase timer behaviour",
   "main": "staircase-timer.js",
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\""
   },
   "keywords": [
     "node-red",
-    "staircase timer",
-    "timer"
+    "staircase",
+    "timer",
+    "timeout",
+    "delay"
   ],
-  "author": "Stephan Linkel",
+  "author": "Stephan Linkel <norganos@linkel.de>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/norganos/node-red-contrib-staircase-timer/issues"
   },
   "node-red": {
-    "version": ">=2.0.0",
+    "version": ">=1.2.0",
     "nodes": {
       "staircase-timer": "staircase-timer.js"
     }
   },
   "repository": {
-    "private": true,
     "type": "git",
-    "url": "git+https://github.com/norganos/node-red-contrib-staircase-timer.git"
+    "url": "https://github.com/norganos/node-red-contrib-staircase-timer.git"
   },
   "homepage": "https://github.com/norganos/node-red-contrib-staircase-timer#readme",
   "devDependencies": {
