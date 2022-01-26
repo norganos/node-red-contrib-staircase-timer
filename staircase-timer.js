@@ -84,12 +84,15 @@ module.exports = function(RED) {
 
     const getTypedVal = function(type, strVal) {
         if (type === 'num') {
-            return parseFloat(strVal)
+            return parseFloat(strVal);
         }
         if (type === 'bool') {
-            return strVal === 'true'
+            return strVal === 'true';
         }
-        return strVal
+        if (type === 'json') {
+            return JSON.parse(strVal);
+        }
+        return strVal;
     }
 
     function StaircaseTimer(config) {
