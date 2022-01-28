@@ -24,3 +24,4 @@ have no direct effect.
 - `onPayload`: value that is put into payload of on-signals ("on" by default)
 - `offPayload`: value that is put into payload of off-signals ("off" by default)
 - `renewable`: boolean that specifies, if a start-signal while state is "on" will restart the timer
+- `communicative`: boolean; if set to true, the node status is updated every second

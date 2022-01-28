@@ -9,7 +9,8 @@
       onPayloadType: {value:"str"},
       offPayload: {value:"off"},
       offPayloadType: {value:"str"},
-      renewable: {value:""}
+      renewable: {value:""},
+      communicative: {value:""}
     },
     inputs:1,
     outputs:1,
@@ -59,6 +60,10 @@
     <label for="node-input-renewable"><i class="fa fa-tag"></i> Renewable</label>
     <input type="checkbox" id="node-input-renewable" value="1">
   </div>
+  <div class="form-row">
+    <label for="node-input-communicative"><i class="fa fa-tag"></i> Communicative</label>
+    <input type="checkbox" id="node-input-communicative" value="1">
+  </div>
 </script>
 
 <script type="text/html" data-help-name="staircase-timer">
@@ -93,6 +98,35 @@
       </dl>
     </li>
   </ol>
+
+  <h3>Configuration</h3>
+  <dl class="message-properties">
+    <dt>timeout
+      <span class="property-type">number</span>
+    </dt>
+    <dd>time in seconds after which the automatic off-signal is emitted
+    </dd>
+    <dt>onPayload
+      <span class="property-type">any</span>
+    </dt>
+    <dd>value that is put into <code>msg.payload</code> of on-signals ("on" by default)
+    </dd>
+    <dt>offPayload
+      <span class="property-type">any</span>
+    </dt>
+    <dd>value that is put into <code>msg.payload</code> of off-signals ("off" by default)
+    </dd>
+    <dt>renewable
+      <span class="property-type">boolean</span>
+    </dt>
+    <dd>specifies if a start-signal while state is "on" will restart the timer
+    </dd>
+    <dt>communicative
+      <span class="property-type">boolean</span>
+    </dt>
+    <dd>if set to true, the node status is updated every second
+    </dd>
+  </dl>
 
   <h3>Details</h3>
   <p>

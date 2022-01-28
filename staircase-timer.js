@@ -4,15 +4,52 @@ module.exports = function(RED) {
     const nodes = [];
     let interval = null;
 
+    const pad = function(number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+        return number;
+    }
+
+    const toISODate = function(date) {
+        return date.getFullYear() +
+            '-' + pad(date.getMonth() + 1) +
+            '-' + pad(date.getDate())
+    };
+    const toISOTime = function(date) {
+        const offset = date.getTimezoneOffset();
+        let tz = "Z";
+        if (offset > 0) {
+            tz = "+" + pad(Math.floor(offset / 60)) + ":" + pad(Math.floor(offset % 60));
+        } else if (offset > 0) {
+            tz = "-" + pad(Math.floor((-offset) / 60)) + ":" + pad(Math.floor((-offset) % 60));
+        }
+        return pad(date.getUTCHours()) +
+            ':' + pad(date.getUTCMinutes()) +
+            ':' + pad(date.getUTCSeconds()) +
+            tz;
+    };
+    const toISO = function(date) {
+        return toISODate(date) + "T" + toISOTime(date);
+    }
+
     const turnOn = function(node) {
         node.state = 'on';
-        node.endTime = Date.now() + node.timeout * 1000;
-        node.status({fill:"green", shape:"dot", text:"on"});
+        const now = Date.now();
+        node.endTime = now + node.timeout * 1000;
+        const until = new Date(node.endTime);
+        let endTime = (new Date(now).toDateString() === until.toDateString()) ? toISOTime(until) : toISO(until);
+        let untilString = "on until " + endTime;
+        node.untilString = untilString;
+        if (node.communicative) {
+            untilString += " (" + Math.ceil((node.endTime - now) / 1000) + "s)";
+        }
+        node.status({fill: "green", shape: "dot", text: untilString});
     }
     const turnOff = function(node) {
         node.state = 'off';
         node.endTime = -1;
-        node.status({fill:"grey", shape:"dot", text:"off"});
+        node.status({fill: "grey", shape: "dot", text: "off"});
     }
 
     const noopAction = function(node) {
@@ -53,8 +90,14 @@ module.exports = function(RED) {
         const now = Date.now();
         for (let idx = 0; idx < nodes.length; idx++) {
             const node = nodes[idx];
-            if (node.state === 'on' && node.endTime > 0 && node.endTime <= now) {
-                timedOut(node);
+            if (node.state === 'on' && node.endTime > 0) {
+                if (node.endTime <= now) {
+                    timedOut(node);
+                } else if (node.communicative) {
+                    let untilString = node.untilString;
+                    untilString += " (" + Math.ceil((node.endTime - now) / 1000) + "s)";
+                    node.status({fill: "green", shape: "dot", text: untilString});
+                }
             }
         }
     }
@@ -102,6 +145,7 @@ module.exports = function(RED) {
         node.onPayload = getTypedVal(config.onPayloadType, config.onPayload) || 'on';
         node.offPayload = getTypedVal(config.offPayloadType, config.offPayload) || 'off';
         node.renewable = config.renewable || '';
+        node.communicative = config.communicative || '';
         node.state = 'off';
         node.endTime = -1;
 
