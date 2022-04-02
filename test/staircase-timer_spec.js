@@ -13,8 +13,8 @@ describe('staircase-timer Node', function () {
             const n1 = helper.getNode("n1");
             n1.should.have.property('name', 'test name');
             n1.should.have.property('timeout', 5);
-            n1.should.have.property('onPayload', 'on');
-            n1.should.have.property('offPayload', 'off');
+            n1.should.have.property('onPayloadJson', '"on"');
+            n1.should.have.property('offPayloadJson', '"off"');
             n1.should.have.property('renewable', '');
             done();
         });
