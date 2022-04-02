@@ -60,7 +60,7 @@ module.exports = function(RED) {
         turnOn(node);
         send({
             ...msg,
-            payload: node.onPayload
+            payload: JSON.parse(node.onPayloadJson)
         });
     }
 
@@ -74,7 +74,7 @@ module.exports = function(RED) {
         turnOff(node);
         send({
             ...msg,
-            payload: node.offPayload
+            payload: JSON.parse(node.offPayloadJson)
         });
     }
 
@@ -82,7 +82,7 @@ module.exports = function(RED) {
         node.log("timeout");
         turnOff(node);
         node.send({
-            payload: node.offPayload
+            payload: JSON.parse(node.offPayloadJson)
         });
     }
 
@@ -142,8 +142,8 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
         const node = this;
         node.timeout = parseInt(config.timeout);
-        node.onPayload = getTypedVal(config.onPayloadType, config.onPayload) || 'on';
-        node.offPayload = getTypedVal(config.offPayloadType, config.offPayload) || 'off';
+        node.onPayloadJson = JSON.stringify(getTypedVal(config.onPayloadType, config.onPayload) || 'on');
+        node.offPayloadJson = JSON.stringify(getTypedVal(config.offPayloadType, config.offPayload) || 'off');
         node.renewable = config.renewable || '';
         node.communicative = config.communicative || '';
         node.state = 'off';
