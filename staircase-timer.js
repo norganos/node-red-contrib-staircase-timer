@@ -181,7 +181,8 @@ module.exports = function(RED) {
             node.log("received " + JSON.stringify(msg));
             send = send || function() { node.send.apply(node,arguments) }
             if (stateMachine[node.state]) {
-                const action = stateMachine[node.state]['' + msg.payload];
+                const payload = (typeof msg === 'object' ? msg.payload : msg) ?? "0";
+                const action = stateMachine[node.state]['' + payload];
                 if (action) {
                     action(node, msg, send);
                     if (done) {
@@ -190,10 +191,10 @@ module.exports = function(RED) {
                 } else {
                     if (done) {
                         // Node-RED 1.0 compatible
-                        done("don't know what to do with payload '" + msg.payload + "' in state '" + node.state + "'");
+                        done("don't know what to do with payload '" + payload + "' in state '" + node.state + "'");
                     } else {
                         // Node-RED 0.x compatible
-                        node.error("don't know what to do with payload '" + msg.payload + "' in state '" + node.state + "'", msg);
+                        node.error("don't know what to do with payload '" + payload + "' in state '" + node.state + "'", msg);
                     }
                 }
             } else {
