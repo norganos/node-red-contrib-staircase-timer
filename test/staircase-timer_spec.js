@@ -319,4 +319,203 @@ describe('staircase-timer Node', function () {
             });
         });
     }
+
+    it('can produce boolean on message', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "bool", onPayload: true, offPayloadType: "bool", offPayload: false, wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', true);
+                done();
+            });
+            n1.receive({ payload: "on" });
+        });
+    });
+
+    it('can produce boolean off message', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "bool", onPayload: true, offPayloadType: "bool", offPayload: false, wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n1.receive({ payload: "start" });
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', false);
+                done();
+            });
+            n1.receive({ payload: "off" });
+        });
+    });
+
+    it('can produce boolean on message with string defs', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "bool", onPayload: 'true', offPayloadType: "bool", offPayload: 'false', wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', true);
+                done();
+            });
+            n1.receive({ payload: "on" });
+        });
+    });
+
+    it('can produce boolean off message with string defs', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "bool", onPayload: 'true', offPayloadType: "bool", offPayload: 'false', wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n1.receive({ payload: "start" });
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', false);
+                done();
+            });
+            n1.receive({ payload: "off" });
+        });
+    });
+
+    it('can produce number on message', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "num", onPayload: 1, offPayloadType: "num", offPayload: 0, wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', 1);
+                done();
+            });
+            n1.receive({ payload: "on" });
+        });
+    });
+
+    it('can produce number off message', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "num", onPayload: 1, offPayloadType: "num", offPayload: 0, wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n1.receive({ payload: "start" });
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', 0);
+                done();
+            });
+            n1.receive({ payload: "off" });
+        });
+    });
+
+    it('can produce number on message with strings defs', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "num", onPayload: '1', offPayloadType: "num", offPayload: '0', wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', 1);
+                done();
+            });
+            n1.receive({ payload: "on" });
+        });
+    });
+
+    it('can produce number off message with strings defs', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "num", onPayload: '1', offPayloadType: "num", offPayload: '0', wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n1.receive({ payload: "start" });
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', 0);
+                done();
+            });
+            n1.receive({ payload: "off" });
+        });
+    });
+
+    it('can produce json on message', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "json", onPayload: {"foo": true}, offPayloadType: "json", offPayload: {"foo": false}, wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', {"foo": true});
+                done();
+            });
+            n1.receive({ payload: "on" });
+        });
+    });
+
+    it('can produce json off message', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "json", onPayload: {"foo": true}, offPayloadType: "json", offPayload: {"foo": false}, wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n1.receive({ payload: "start" });
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', {"foo": false});
+                done();
+            });
+            n1.receive({ payload: "off" });
+        });
+    });
+
+    it('can produce json on message with strings defs', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "json", onPayload: '{"foo": true}', offPayloadType: "json", offPayload: '{"foo": false}', wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', {"foo": true});
+                done();
+            });
+            n1.receive({ payload: "on" });
+        });
+    });
+
+    it('can produce json off message with strings defs', function (done) {
+        const flow = [
+            { id: "n1", type: "staircase-timer", name: "test name", timeout: "2", onPayloadType: "json", onPayload: '{"foo": true}', offPayloadType: "json", offPayload: '{"foo": false}', wires: [["n2"]] },
+            { id: "n2", type: "helper" }
+        ];
+        helper.load(timerNode, flow, function () {
+            const n2 = helper.getNode("n2");
+            const n1 = helper.getNode("n1");
+            n1.receive({ payload: "start" });
+            n2.on("input", function (msg) {
+                msg.should.have.property('payload', {"foo": false});
+                done();
+            });
+            n1.receive({ payload: "off" });
+        });
+    });
+
 });

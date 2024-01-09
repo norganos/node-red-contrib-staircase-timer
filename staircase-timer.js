@@ -125,25 +125,26 @@ module.exports = function(RED) {
         }
     }
 
-    const getTypedVal = function(type, strVal) {
+    const getTypedVal = function(type, strVal, defaultval) {
         if (type === 'num') {
-            return parseFloat(strVal);
+            const val = typeof strVal === 'object' ? strVal : parseFloat('' + strVal);
+            return isNaN(val) ? defaultval : val;
         }
         if (type === 'bool') {
-            return strVal === 'true';
+            return typeof strVal === 'boolean' ? strVal : ('' + strVal) === 'true';
         }
         if (type === 'json') {
-            return JSON.parse(strVal);
+            return typeof strVal === 'object' ? strVal : JSON.parse('' + strVal);
         }
-        return strVal;
+        return strVal || defaultval;
     }
 
     function StaircaseTimer(config) {
         RED.nodes.createNode(this, config);
         const node = this;
         node.timeout = parseInt(config.timeout);
-        node.onPayloadJson = JSON.stringify(getTypedVal(config.onPayloadType, config.onPayload) || 'on');
-        node.offPayloadJson = JSON.stringify(getTypedVal(config.offPayloadType, config.offPayload) || 'off');
+        node.onPayloadJson = JSON.stringify(getTypedVal(config.onPayloadType, config.onPayload, 'on'));
+        node.offPayloadJson = JSON.stringify(getTypedVal(config.offPayloadType, config.offPayload, 'off'));
         node.renewable = config.renewable || '';
         node.communicative = config.communicative || '';
         node.state = 'off';
@@ -175,7 +176,7 @@ module.exports = function(RED) {
             }
         }
 
-        node.warn("created staircase-timer with config " + JSON.stringify(config));
+        node.log("created staircase-timer with config " + JSON.stringify(config));
 
         node.on('input', function(msg, send, done) {
             node.log("received " + JSON.stringify(msg));
